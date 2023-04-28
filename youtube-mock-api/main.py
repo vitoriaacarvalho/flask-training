@@ -6,22 +6,19 @@ app = Flask(__name__)
 api = Api(app)
 # this is saying we're gonna wrap our app around an api
 
+names = {"tim": {"age": 19 , "gender": "male"},
+         "bill": {"age": 23, "gender": "male"}}
+
 
 class HelloWorld(Resource):
     # this is get overriden from Resource (and all the other methods too)
-    def get(self):
-        return {"data": "Hello World"}
-
-    def post(self):
-        return {"data": "Posted"}
+    def get(self,name):
+        return names[name]
 
 
-""" the reason we return info inside a dict is because we want to make our 
-response serializable and dicts are basically formatted like jsons
-"""
 
-api.add_resource(HelloWorld, "/helloworld")
-# making our HelloWorld class accessible through this endpoint
+api.add_resource(HelloWorld, "/helloworld/<string:name>")
+
 
 
 
