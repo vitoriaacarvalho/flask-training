@@ -6,9 +6,9 @@ api = Api(app)
 # this is saying we're gonna wrap our app around an api
 
 video_post_args = reqparse.RequestParser()
-video_post_args.add_argument("name", type=str, help="name of the video")
-video_post_args.add_argument("views", type=int, help="views of the video")
-video_post_args.add_argument("likes", type=int, help="likes on the video")
+video_post_args.add_argument("name", type=str, help="name of the video", required=True)
+video_post_args.add_argument("views", type=int, help="views of the video", required=True)
+video_post_args.add_argument("likes", type=int, help="likes on the video", required=True)
 
 """
 line 8 means we're gonna make a new request parser object and it will parse through the request thats being sent
@@ -30,6 +30,7 @@ class Video(Resource):
         args = video_post_args.parse_args()
         videos[video_id] = args
         return videos[video_id], 201
+        # this 201 is only to let us know that it was created but its not needed
         # the parse_args gets all the arguments from the request
 
 
