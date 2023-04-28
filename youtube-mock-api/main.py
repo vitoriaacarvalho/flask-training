@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_restful import Api, Resource, reqparse
+from flask_restful import Api, Resource, reqparse, abort
 
 app = Flask(__name__)
 api = Api(app)
@@ -10,20 +10,16 @@ video_post_args.add_argument("name", type=str, help="name of the video", require
 video_post_args.add_argument("views", type=int, help="views of the video", required=True)
 video_post_args.add_argument("likes", type=int, help="likes on the video", required=True)
 
-"""
-line 8 means we're gonna make a new request parser object and it will parse through the request thats being sent
-and make sure that it fits the guideline we created and has the right information in it.
-
-lines 9-11 are saying "this is something that needs to be sent with the request"
-"name" is essentially the name of the key that needs to be sent of TYPE string and HELP is what we should display
-to the sender if they dont send us this name argument (basically an error message)
-"""
-
 videos = {}
+
+def abort_if_video_id_doesnt_exist(video_id):
+    if video_id not in videos:
+        abort(404, message="video id is not valid")
 
 
 class Video(Resource):
     def get(self, video_id):
+        abort_if_video_id_doesnt_exist(video_id)
         return videos[video_id]
 
     def post(self, video_id):
