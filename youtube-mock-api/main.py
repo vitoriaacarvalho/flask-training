@@ -12,9 +12,15 @@ video_post_args.add_argument("likes", type=int, help="likes on the video", requi
 
 videos = {}
 
+
 def abort_if_video_id_doesnt_exist(video_id):
     if video_id not in videos:
         abort(404, message="video id is not valid")
+
+
+def abort_if_video_exists(video_id):
+    if video_id in videos:
+        abort(409, message="video already exists")
 
 
 class Video(Resource):
@@ -23,12 +29,18 @@ class Video(Resource):
         return videos[video_id]
 
     def post(self, video_id):
+        abort_if_video_exists()
         args = video_post_args.parse_args()
         videos[video_id] = args
         return videos[video_id], 201
         # this 201 is only to let us know that it was created but its not needed
         # the parse_args gets all the arguments from the request
 
+    def delete(self, video_id):
+        abort_if_video_id_doesnt_exist()
+        del videos[video_id]
+        return '', 204
+        # 204 stands for deleted successfully
 
 api.add_resource(Video, "/video/<int:video_id>")
 
