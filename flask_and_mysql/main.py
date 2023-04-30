@@ -20,6 +20,8 @@ def execute_query(query, fetch_all=True):
     else:
         results = cursor.fetchone()
     cursor.close()
+    if 'select' or 'SELECT' not in query:
+        mydb.commit()
     return results
 
 
@@ -47,18 +49,17 @@ def create_car():
     car = request.json
     sql = f'insert into car (brand, model, year) values ("{car["brand"]}","{car["model"]}", {car["year"]})'
     execute_query(sql, fetch_all=False)
-    mydb.commit()
     return make_response(jsonify(message='Car successfully posted', car=car))
 
 
-@app.route('/cars', methods=['PUT'])
-def update_car():
+@app.route('/cars/<int:id>', methods=['PUT'])
+def update_car(id):
     car = request.json
     sql = f'update car set brand = "{car["brand"]}" , model = "{car["model"]}", \
-            year = {car["year"]} where id = {car["id"]}'
+            year = {car["year"]} where id = {id}'
     execute_query(sql, fetch_all=False)
-    mydb.commit()
     return make_response(jsonify(message='car updated!', car=car))
+
 
 
 
