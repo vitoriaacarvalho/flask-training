@@ -61,6 +61,13 @@ def update_car(id):
     return make_response(jsonify(message='car updated!', car=car))
 
 
+@app.route('/cars/<int:id>', methods=['DELETE'])
+def delete_car(id):
+    sql = f'delete from car where id = {id}'
+    execute_query(sql, fetch_all=False)
+    return make_response(jsonify(message='car deleted'))
+
+
 
 
 app.run()
