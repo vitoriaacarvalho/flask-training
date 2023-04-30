@@ -39,12 +39,7 @@ def get_cars():
 
             }
         )
-    return make_response(
-        jsonify(
-            message='Car List',
-            data=cars
-        )
-    )
+    return make_response(jsonify(message='Car List', data=cars))
 
 
 @app.route('/cars', methods=['POST'])
@@ -53,15 +48,17 @@ def create_car():
     sql = f'insert into car (brand, model, year) values ("{car["brand"]}","{car["model"]}", {car["year"]})'
     execute_query(sql, fetch_all=False)
     mydb.commit()
-    return make_response(
-        jsonify(
-            message='Car successfully posted',
-            car=car
-        )
-    )
+    return make_response(jsonify(message='Car successfully posted', car=car))
 
 
-
+@app.route('/cars', methods=['PUT'])
+def update_car():
+    car = request.json
+    sql = f'update car set brand = "{car["brand"]}" , model = "{car["model"]}", \
+            year = {car["year"]} where id = {car["id"]}'
+    execute_query(sql, fetch_all=False)
+    mydb.commit()
+    return make_response(jsonify(message='car updated!', car=car))
 
 
 
