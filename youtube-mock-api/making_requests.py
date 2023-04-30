@@ -12,7 +12,6 @@ for i in range(len(data)):
 """
 
 
-
 response = requests.get(BASE + "video/3")
 print(response.json())
 
